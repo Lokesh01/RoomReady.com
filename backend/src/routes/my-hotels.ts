@@ -1,7 +1,10 @@
 import express from "express";
 import multer from "multer";
 import verifyToken from "../middleware/auth";
-import { createNewHotel } from "../controllers/my-hotels.controllers";
+import {
+  createNewHotel,
+  getMyHotels,
+} from "../controllers/my-hotels.controllers";
 // import { hotelFormValidator, validate } from "../middleware/validator";
 import { body } from "express-validator";
 
@@ -37,5 +40,8 @@ router.post(
   upload.array("imageFiles", 6),
   createNewHotel
 ); //* expect a form property from frontend by the name imageFiles having at most 6 images
+
+// get user's hotels endpoint
+router.get("/", verifyToken, getMyHotels);
 
 export default router;

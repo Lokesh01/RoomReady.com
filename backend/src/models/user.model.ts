@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { UserType } from "../utils/types";
+import { UserType } from "../shared/types";
 
 const userSchema: Schema<UserType> = new mongoose.Schema({
   email: {

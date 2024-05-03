@@ -1,7 +1,20 @@
 import { Request, Response } from "express";
-import { HotelType } from "../utils/types";
+import { HotelType } from "../shared/types";
 import cloudinary from "cloudinary";
 import Hotel from "../models/hotel.model";
+
+// todo: learn more about the importance of converting binary files(audio,video) to base64 before transmitting over internet
+const uploadImages = async (imageFiles: Express.Multer.File[]) => {
+  const uploadPromises = imageFiles.map(async (image) => {
+    const b64 = Buffer.from(image.buffer).toString("base64");
+    let dataURI = "data:" + image.mimetype + ";base64," + b64;
+    const res = await cloudinary.v2.uploader.upload(dataURI);
+    return res.url;
+  });
+
+  const imageUrls = await Promise.all(uploadPromises);
+  return imageUrls;
+};
 
 export const createNewHotel = async (req: Request, res: Response) => {
   try {
@@ -23,15 +36,12 @@ export const createNewHotel = async (req: Request, res: Response) => {
   }
 };
 
-// todo: learn more about the importance of converting binary files(audio,video) to base64 before transmitting over internet
-const uploadImages = async (imageFiles: Express.Multer.File[]) => {
-  const uploadPromises = imageFiles.map(async (image) => {
-    const b64 = Buffer.from(image.buffer).toString("base64");
-    let dataURI = "data:" + image.mimetype + ";base64," + b64;
-    const res = await cloudinary.v2.uploader.upload(dataURI);
-    return res.url;
-  });
-
-  const imageUrls = await Promise.all(uploadPromises);
-  return imageUrls;
+export const getMyHotels = async (req: Request, res: Response) => {
+  try {
+    const hotels = await Hotel.find({ userId: req.userId });
+    res.status(200).json(hotels);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error in fetching details !" });
+  }
 };

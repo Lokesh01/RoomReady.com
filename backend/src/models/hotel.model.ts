@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { BookingType, HotelType } from "../utils/types";
+import { BookingType, HotelType } from "../shared/types";
 
 const bookingSchema: Schema<BookingType> = new mongoose.Schema({
   firstName: { type: String, required: true },
