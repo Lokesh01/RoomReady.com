@@ -3,7 +3,9 @@ import multer from "multer";
 import verifyToken from "../middleware/auth";
 import {
   createNewHotel,
+  viewHotel,
   getMyHotels,
+  editHotel,
 } from "../controllers/my-hotels.controllers";
 // import { hotelFormValidator, validate } from "../middleware/validator";
 import { body } from "express-validator";
@@ -43,5 +45,11 @@ router.post(
 
 // get user's hotels endpoint
 router.get("/", verifyToken, getMyHotels);
+
+// view hotel details endpoint
+router.get("/:id",verifyToken,viewHotel);
+
+// edit hotel endpoint
+router.put("/:hotelId",verifyToken,upload.array("imageFiles"),editHotel)
 
 export default router;

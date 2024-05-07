@@ -20,40 +20,38 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByText("Sign In Successful !")).toBeVisible();
 });
 
-// test("should allow user to add a hotel", async ({ page }) => {
-//   await page.goto(`${UI_URL}add-hotel`);
+test("should allow user to add a hotel", async ({ page }) => {
+  await page.goto(`${UI_URL}add-hotel`);
 
-//   await page.locator('[name="name"]').fill("Test Hotel");
-//   await page.locator('[name="city"]').fill("Test City");
-//   await page.locator('[name="country"]').fill("Test Country");
-//   await page
-//     .locator('[name="description"]')
-//     .fill("This is a description for the test hotel");
-//   await page.locator('[name="pricePerNight"]').fill("1000");
-//   await page.selectOption('select[name="starRating"]', "3");
-//   await page.getByText("Budget").click();
-//   await page.getByLabel("Free Wifi").check();
-//   await page.getByLabel("Parking").check();
-//   await page.locator('[name="adultCount"]').fill("2");
-//   await page.locator('[name="childCount"]').fill("4");
+  await page.locator('[name="name"]').fill("Test Hotel");
+  await page.locator('[name="city"]').fill("Test City");
+  await page.locator('[name="country"]').fill("Test Country");
+  await page
+    .locator('[name="description"]')
+    .fill("This is a description for the test hotel");
+  await page.locator('[name="pricePerNight"]').fill("1000");
+  await page.selectOption('select[name="starRating"]', "3");
+  await page.getByText("Budget").click();
+  await page.getByLabel("Free Wifi").check();
+  await page.getByLabel("Parking").check();
+  await page.locator('[name="adultCount"]').fill("2");
+  await page.locator('[name="childCount"]').fill("4");
 
-//   await page.setInputFiles('[name="imageFiles"]', [
-//     path.join(__dirname, "files", "1.png"),
-//     path.join(__dirname, "files", "2.png"),
-//   ]);
+  await page.setInputFiles('[name="imageFiles"]', [
+    path.join(__dirname, "files", "1.png"),
+    path.join(__dirname, "files", "2.png"),
+  ]);
 
-//   await page.getByRole("button", { name: "Save" }).click();
-//   await page.waitForTimeout(10000); // saving hotel sometimes takes more time so we need to wait until testing the successful completion
-//   await expect(page.getByText("Hotel Saved !")).toBeVisible();
-// });
+  await page.getByRole("button", { name: "Save" }).click();
+  await page.waitForTimeout(10000); // saving hotel sometimes takes more time so we need to wait until testing the successful completion
+  await expect(page.getByText("Hotel Saved !")).toBeVisible();
+});
 
 test("should display hotels", async ({ page }) => {
   await page.goto(`${UI_URL}my-hotels`);
 
   await expect(page.getByText("Test Hotel")).toBeVisible();
-  await expect(
-    page.getByText("This is a test description")
-  ).toBeVisible();
+  await expect(page.getByText("This is a test description")).toBeVisible();
   await expect(page.getByText("Test City, Test Country")).toBeVisible();
   await expect(page.getByText("Budget")).toBeVisible();
   await expect(page.getByText("₹ 1000 per night")).toBeVisible();
@@ -65,4 +63,21 @@ test("should display hotels", async ({ page }) => {
   ).toBeVisible();
 
   await expect(page.getByRole("link", { name: "Add Hotel" })).toBeVisible();
+});
+
+test("should edit the hotel", async ({ page }) => {
+  await page.goto(`${UI_URL}my-hotels`);
+
+  await page.getByRole("link", { name: "View Details" }).first().click();
+
+  await page.waitForSelector('[name="name"]', { state: "attached" });
+  await expect(page.locator('[name="name"]')).toHaveValue("Test Hotel");
+  await page.locator('[name="name"]').fill("Test Hotel Updated");
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByText("Hotel Saved!")).toBeVisible();
+
+  await page.reload();
+  await expect(page.locator('[name="name"]')).toHaveValue("Test Hotel Updated");
+  await page.locator('[name="name"]').fill("Test Hotel");
+  await page.getByRole("button", { name: "Save" }).click();
 });
