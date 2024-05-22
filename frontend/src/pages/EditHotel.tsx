@@ -1,7 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
 import { useMutation, useQuery } from "react-query";
-import { fetchMyHotelByIdAPI, updateMyHotelByIdAPI } from "../apis/hotel-api";
+import {
+  fetchMyHotelByIdAPI,
+  updateMyHotelByIdAPI,
+} from "../apis/my-hotel-api";
 import ManageHotelForm from "../forms/ManageHotelForms/ManageHotelForm";
 
 const EditHotel = () => {
@@ -30,11 +33,7 @@ const EditHotel = () => {
   };
 
   return (
-    <ManageHotelForm
-      hotel={hotel}
-      onSave={handleSave}
-      isLoading={isLoading}
-    />
+    <ManageHotelForm hotel={hotel} onSave={handleSave} isLoading={isLoading} />
   );
 };
 
