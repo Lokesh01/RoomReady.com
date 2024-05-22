@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Hotel from "../models/hotel.model";
 import { HotelSearchResponse } from "../shared/types";
-import {SearchParams} from "../../../frontend/src/apis/hotel-api";
 
 export const searchHotels = async (req: Request, res: Response) => {
   try {
@@ -51,7 +50,7 @@ export const searchHotels = async (req: Request, res: Response) => {
   }
 };
 
-const constructSearchQuery = (queryParams: SearchParams) => {
+const constructSearchQuery = (queryParams: any) => {
   let constructedQuery: any = {};
 
   if (queryParams.destination) {
