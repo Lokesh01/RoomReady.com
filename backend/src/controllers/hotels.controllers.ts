@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Hotel from "../models/hotel.model";
 import { HotelSearchResponse } from "../shared/types";
+import { validationResult } from "express-validator";
 
 export const searchHotels = async (req: Request, res: Response) => {
   try {
@@ -50,11 +51,28 @@ export const searchHotels = async (req: Request, res: Response) => {
   }
 };
 
+export const searchHotelById = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const id = req.params.id.toString();
+
+  try {
+    const hotel = await Hotel.findById(id);
+    return res.status(200).json(hotel);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching hotel" });
+  }
+};
+
 const constructSearchQuery = (queryParams: any) => {
   let constructedQuery: any = {};
 
   if (queryParams.destination) {
-    constructedQuery.$or = [ // logical or will search for docs that satisfies either one of the conditions
+    constructedQuery.$or = [
+      // logical or will search for docs that satisfies either one of the conditions
       { city: new RegExp(queryParams.destination, "i") }, // i stands for case insensitive search
       { country: new RegExp(queryParams.destination, "i") },
     ];
