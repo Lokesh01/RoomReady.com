@@ -63,9 +63,25 @@ export const userLogin = async (req: Request, res: Response) => {
       maxAge: 86400000,
     });
 
-    return res.status(200).json({userId: user._id});
+    return res.status(200).json({ userId: user._id });
   } catch (error) {
     console.log(error);
-    res.status(500).json({message: "Something went wrong"})
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export const getUserDetails = async (req: Request, res: Response) => {
+  const userId = req.userId;
+
+  try {
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    return res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "something went wrong !" });
   }
 };
