@@ -68,7 +68,11 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
     });
 
     if (result.paymentIntent?.status === "succeeded") {
-      bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
+      bookRoom({
+        ...formData,
+        paymentIntentId: result.paymentIntent.id,
+        totalCost: Number(paymentIntent.totalCost.toFixed(2)),
+      });
     }
   };
 
