@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   ConfirmBooking,
   createPaymentIntent,
+  fetchAllHotels,
   searchHotelById,
   searchHotels,
 } from "../controllers/hotels.controllers";
@@ -11,6 +12,8 @@ import verifyToken from "../middleware/auth";
 const router = Router();
 
 router.get("/search", searchHotels);
+
+router.get("/", fetchAllHotels);
 
 // /url/:1234 view details of a particular hotel
 router.get(
@@ -25,6 +28,6 @@ router.post(
   createPaymentIntent
 );
 
-router.post("/:hotelId/bookings",verifyToken,ConfirmBooking);
+router.post("/:hotelId/bookings", verifyToken, ConfirmBooking);
 
 export default router;

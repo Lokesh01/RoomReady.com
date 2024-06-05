@@ -1,4 +1,7 @@
-import { HotelSearchResponse } from "../../../backend/src/shared/types";
+import {
+  HotelSearchResponse,
+  HotelType,
+} from "../../../backend/src/shared/types";
 import { API_BASE_URL } from "./auth-api";
 
 export type SearchParams = {
@@ -45,10 +48,18 @@ export const searchHotelsAPI = async (
   return response.json();
 };
 
+export const fetchHotels = async (): Promise<HotelType[]> => {
+  const response = await fetch(`${API_BASE_URL}/api/hotels`);
+
+  if (!response.ok) throw new Error("Error fetching hotels");
+
+  return response.json();
+};
+
 export const fetchHotelById = async (hotelId: string) => {
   const response = await fetch(`${API_BASE_URL}/api/hotels/${hotelId}`);
 
-  if(!response.ok) {
+  if (!response.ok) {
     throw new Error("Error fetching Hotels !");
   }
 
